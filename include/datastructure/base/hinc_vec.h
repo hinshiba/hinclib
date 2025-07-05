@@ -34,14 +34,10 @@ _Vec *_vec_cpy(_Vec *vec);
 // int vec_index_of(Vec *vec, void *data, int (*cmp)(const void *, const void
 // *));
 
-// int vec_for_each(Vec *vec, void (*fn)(void *, size_t, void *), void
-// *user_data); Vec *vec_map(Vec *vec, void *(*fn)(void *, size_t, void *), void
-// *user_data); Vec *vec_filter(Vec *vec, bool (*fn)(void *, size_t, void *),
-// void *user_data); void *vec_reduce(Vec *vec, void *(*fn)(void *, void *,
-// size_t, void *),
-//                  void *init, void *user_data);
-// bool vec_all(Vec *vec, bool (*fn)(void *, size_t, void *), void
-// *user_data);bool vec_any(Vec *vec, bool (*fn)(void *, size_t, void *), void
+// vec_map
+// vec_reduce
+// vec_all
+// vec_any
 
 // Vec *vec_slice(Vec *vec, size_t start, size_t end);
 
@@ -93,6 +89,26 @@ _Vec *_vec_cpy(_Vec *vec);
         for (size_t i = 0; i < vec->len; ++i) {                        \
             func(vec_##Type##_get_mut(vec, i));                        \
         }                                                              \
+    }                                                                  \
+                                                                       \
+    vec_##Type *vec_##Type##_filter(vec_##Type *vec,                   \
+                                    bool (*func)(const Type *)) {      \
+        vec_##Type *new_vec = vec_##Type##_new(vec->len);              \
+        for (size_t i = 0; i < vec->len; ++i) {                        \
+            const Type *elem = vec_##Type##_get(vec, i);               \
+            if (func(elem)) vec_##Type##_push(new_vec, *elem);         \
+        }                                                              \
+        return new_vec;                                                \
+    }                                                                  \
+    Type vec_##Type##_reduce(vec_##Type *vec,                          \
+                             Type (*func)(const Type *, const Type *), \
+                             Type first) {                             \
+        Type res = first;                                              \
+        for (size_t i = 0; i < vec->len; ++i) {                        \
+            const Type *elem = vec_##Type##_get(vec, i);               \
+            res = func(&res, elem);                                    \
+        }                                                              \
+        return res;                                                    \
     }
 
 #endif  // HINC_VEC_H
