@@ -24,7 +24,7 @@ size_t _vec_pop(_Vec *vec);
 void _vec_resize(_Vec *vec, size_t len);
 // void vec_shrink(_Vec *vec);
 
-// _Vec *vec_copy(_Vec *vec);
+_Vec *_vec_cpy(_Vec *vec);
 // void vec_reverse(_Vec *vec);
 // void vec_concat(_Vec *vec1, _Vec *vec2);
 
@@ -79,6 +79,10 @@ void _vec_resize(_Vec *vec, size_t len);
                                                                       \
     Type vec_##Type##_pop(vec_##Type *vec) {                          \
         return vec->data[_vec_pop((_Vec *)vec)];                      \
+    }                                                                 \
+                                                                      \
+    vec_##Type *vec_##Type##_cpy(vec_##Type *vec) {                   \
+        return (vec_##Type *)_vec_cpy((_Vec *)vec);                   \
     }
 
 #endif  // HINC_VEC_H

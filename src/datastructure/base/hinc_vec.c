@@ -101,11 +101,17 @@ void _vec_resize(_Vec *vec, size_t len) {
 }
 
 /*------------------------------------------------------------*/
-/* MARK: アルゴリズム関連 (bseach, sort, index_of)
+/* MARK: 基本演算関連 (copy, revese, concat)
 /*------------------------------------------------------------*/
 
+_Vec *_vec_cpy(_Vec *vec) {
+    _Vec *new_vec = _vec_new(vec->data_size, vec->len);
+    memcpy(new_vec->data, vec->data, vec->data_size * vec->len);
+    return new_vec;
+}
+
 /*------------------------------------------------------------*/
-/* MARK: 基本演算関連 (copy, revese, concat)
+/* MARK: アルゴリズム関連 (bseach, sort, index_of)
 /*------------------------------------------------------------*/
 
 /*------------------------------------------------------------*/
