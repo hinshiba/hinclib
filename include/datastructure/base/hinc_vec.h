@@ -13,44 +13,40 @@ typedef struct {
 
 _Vec *_vec_new(size_t data_size, size_t len);
 _Vec *_vec_from(void *data, size_t data_size, size_t len);
-
 // void vec_free(Vec *vec);
+
 size_t _vec_get(const _Vec *vec, size_t idx);
 size_t _vec_get_mut(_Vec *vec, size_t idx);
+
 size_t _vec_push(_Vec *vec);
 // void *vec_pop(Vec *vec);
-// int vec_insert(Vec *vec, size_t index, void *data);
-// void *vec_remove(Vec *vec, size_t index);
-// // int vec_reserve(Vec *vec, size_t len);
+
 void _vec_resize(_Vec *vec, size_t len);
-// int vec_shrink(Vec *vec);
-// Vec *vec_copy(Vec *vec);
-// Vec *vec_slice(Vec *vec, size_t start, size_t end);
-// int vec_splice(Vec *vec, size_t start, size_t count, void *data, size_t num);
-// int vec_concat(Vec *vec1, Vec *vec2);
-// int vec_clear(Vec *vec);
-// int vec_sort(Vec *vec, int (*cmp)(const void *, const void *));
+// void vec_shrink(_Vec *vec);
+
+// _Vec *vec_copy(_Vec *vec);
+// void vec_reverse(_Vec *vec);
+// void vec_concat(_Vec *vec1, _Vec *vec2);
+
+// void vec_sort(Vec *vec, int (*cmp)(const void *, const void *));
 // int vec_bsearch(Vec *vec, const void *key,
 //                 int (*cmp)(const void *, const void *));
-// int vec_reverse(Vec *vec);
 // int vec_index_of(Vec *vec, void *data, int (*cmp)(const void *, const void
-// *)); int vec_last_index_of(Vec *vec, void *data,
-//                       int (*cmp)(const void *, const void *));
+// *));
+
 // int vec_for_each(Vec *vec, void (*fn)(void *, size_t, void *), void
 // *user_data); Vec *vec_map(Vec *vec, void *(*fn)(void *, size_t, void *), void
 // *user_data); Vec *vec_filter(Vec *vec, bool (*fn)(void *, size_t, void *),
 // void *user_data); void *vec_reduce(Vec *vec, void *(*fn)(void *, void *,
 // size_t, void *),
 //                  void *init, void *user_data);
-// bool vec_every(Vec *vec, bool (*fn)(void *, size_t, void *), void
-// *user_data); bool vec_some(Vec *vec, bool (*fn)(void *, size_t, void *), void
-// *user_data); Vec *vec_find(Vec *vec, bool (*fn)(void *, size_t, void *), void
-// *user_data); int vec_find_index(Vec *vec, bool (*fn)(void *, size_t, void *),
-//                    void *user_data);
-// int vec_fill(Vec *vec, void *data, size_t start, size_t end);
-// bool vec_includes(Vec *vec, void *data, int (*cmp)(const void *, const void
-// *)); char *vec_join(Vec *vec, const char *sep); Vec *vec_from(void *data,
-// size_t len, size_t data_size); Vec *vec_of(size_t data_size, int count, ...);
+// bool vec_all(Vec *vec, bool (*fn)(void *, size_t, void *), void
+// *user_data);bool vec_any(Vec *vec, bool (*fn)(void *, size_t, void *), void
+
+// Vec *vec_slice(Vec *vec, size_t start, size_t end);
+
+// int vec_insert(Vec *vec, size_t index, void *data);
+// void *vec_remove(Vec *vec, size_t index);
 
 #define vec_def(Type)                                                 \
     typedef struct {                                                  \
