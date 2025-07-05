@@ -20,5 +20,7 @@ int main(void) {
     printf("%d\n", *vec_int_get(vec, 1));
     printf("%d\n", *vec_int_get(vec, 2));
     vec_int_push(vec, 100);
+    int *a = vec_int_get_mut(vec, 1);
+    *a = 10;
     printf("%d\n", *vec_int_get(vec, 3));
 }

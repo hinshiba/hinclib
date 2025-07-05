@@ -57,7 +57,11 @@ size_t _vec_get(const _Vec *vec, size_t idx) {
     _must_in_len(vec, idx);
     return idx;
 }
-// size_t _vec_get_mut(_Vec *vec, size_t idx) { return idx; }
+
+size_t _vec_get_mut(_Vec *vec, size_t idx) {
+    _must_in_len(vec, idx);
+    return idx;
+}
 
 /*------------------------------------------------------------*/
 /* MARK: pushとpop

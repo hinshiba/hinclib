@@ -4,10 +4,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-//==============================================================================
-// Vec
-//==============================================================================
-
 typedef struct {
     void *data;
     size_t data_size;
@@ -20,7 +16,7 @@ _Vec *_vec_from(void *data, size_t data_size, size_t len);
 
 // void vec_free(Vec *vec);
 size_t _vec_get(const _Vec *vec, size_t idx);
-// void *vec_set(Vec *vec, size_t index, void *data);
+size_t _vec_get_mut(_Vec *vec, size_t idx);
 size_t _vec_push(_Vec *vec);
 // void *vec_pop(Vec *vec);
 // int vec_insert(Vec *vec, size_t index, void *data);
@@ -64,7 +60,7 @@ void _vec_resize(_Vec *vec, size_t len);
         size_t size;                                             \
     } vec_##Type;                                                \
                                                                  \
-    vec_##Type *vec_##Type##_newType(size_t len) {               \
+    vec_##Type *vec_##Type##_new(size_t len) {                   \
         return (vec_##Type *)_vec_new(sizeof(Type), len);        \
     }                                                            \
                                                                  \
@@ -74,6 +70,10 @@ void _vec_resize(_Vec *vec, size_t len);
                                                                  \
     const Type *vec_##Type##_get(vec_##Type *vec, size_t idx) {  \
         return &vec->data[_vec_get((_Vec *)vec, idx)];           \
+    }                                                            \
+                                                                 \
+    Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {    \
+        return &vec->data[_vec_get_mut((_Vec *)vec, idx)];       \
     }                                                            \
                                                                  \
     void vec_##Type##_push(vec_##Type *vec, const Type elem) {   \
