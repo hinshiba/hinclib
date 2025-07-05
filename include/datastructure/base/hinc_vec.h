@@ -48,45 +48,51 @@ _Vec *_vec_cpy(_Vec *vec);
 // int vec_insert(Vec *vec, size_t index, void *data);
 // void *vec_remove(Vec *vec, size_t index);
 
-#define vec_def(Type)                                                 \
-    typedef struct {                                                  \
-        Type *data;                                                   \
-        size_t data_size;                                             \
-        size_t len;                                                   \
-        size_t size;                                                  \
-    } vec_##Type;                                                     \
-                                                                      \
-    vec_##Type *vec_##Type##_new(size_t len) {                        \
-        return (vec_##Type *)_vec_new(sizeof(Type), len);             \
-    }                                                                 \
-                                                                      \
-    vec_##Type *vec_##Type##_from(Type data[], size_t len) {          \
-        return (vec_##Type *)_vec_from(data, sizeof(Type), len);      \
-    }                                                                 \
-                                                                      \
-    const Type *vec_##Type##_get(const vec_##Type *vec, size_t idx) { \
-        return &vec->data[_vec_get((_Vec *)vec, idx)];                \
-    }                                                                 \
-                                                                      \
-    Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {         \
-        return &vec->data[_vec_get_mut((_Vec *)vec, idx)];            \
-    }                                                                 \
-                                                                      \
-    void vec_##Type##_push(vec_##Type *vec, const Type elem) {        \
-        vec->data[_vec_push((_Vec *)vec)] = elem;                     \
-        return;                                                       \
-    }                                                                 \
-                                                                      \
-    Type vec_##Type##_pop(vec_##Type *vec) {                          \
-        return vec->data[_vec_pop((_Vec *)vec)];                      \
-    }                                                                 \
-                                                                      \
-    void vec_##Type##_resize(vec_##Type *vec, size_t len) {           \
-        return _vec_resize((_Vec *)vec, len);                         \
-    }                                                                 \
-                                                                      \
-    vec_##Type *vec_##Type##_cpy(vec_##Type *vec) {                   \
-        return (vec_##Type *)_vec_cpy((_Vec *)vec);                   \
+#define vec_def(Type)                                                  \
+    typedef struct {                                                   \
+        Type *data;                                                    \
+        size_t data_size;                                              \
+        size_t len;                                                    \
+        size_t size;                                                   \
+    } vec_##Type;                                                      \
+                                                                       \
+    vec_##Type *vec_##Type##_new(size_t len) {                         \
+        return (vec_##Type *)_vec_new(sizeof(Type), len);              \
+    }                                                                  \
+                                                                       \
+    vec_##Type *vec_##Type##_from(Type data[], size_t len) {           \
+        return (vec_##Type *)_vec_from(data, sizeof(Type), len);       \
+    }                                                                  \
+                                                                       \
+    const Type *vec_##Type##_get(const vec_##Type *vec, size_t idx) {  \
+        return &vec->data[_vec_get((_Vec *)vec, idx)];                 \
+    }                                                                  \
+                                                                       \
+    Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {          \
+        return &vec->data[_vec_get_mut((_Vec *)vec, idx)];             \
+    }                                                                  \
+                                                                       \
+    void vec_##Type##_push(vec_##Type *vec, const Type elem) {         \
+        vec->data[_vec_push((_Vec *)vec)] = elem;                      \
+        return;                                                        \
+    }                                                                  \
+                                                                       \
+    Type vec_##Type##_pop(vec_##Type *vec) {                           \
+        return vec->data[_vec_pop((_Vec *)vec)];                       \
+    }                                                                  \
+                                                                       \
+    void vec_##Type##_resize(vec_##Type *vec, size_t len) {            \
+        return _vec_resize((_Vec *)vec, len);                          \
+    }                                                                  \
+                                                                       \
+    vec_##Type *vec_##Type##_cpy(vec_##Type *vec) {                    \
+        return (vec_##Type *)_vec_cpy((_Vec *)vec);                    \
+    }                                                                  \
+                                                                       \
+    void vec_##Type##_foreach(vec_##Type *vec, void (*func)(Type *)) { \
+        for (size_t i = 0; i < vec->len; ++i) {                        \
+            func(vec_##Type##_get_mut(vec, i));                        \
+        }                                                              \
     }
 
 #endif  // HINC_VEC_H

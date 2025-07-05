@@ -47,7 +47,6 @@ _Vec *_vec_from(void *data, size_t data_size, size_t len) {
 void vec_free(void *vec) {
     free(((_Vec *)vec)->data);
     free((_Vec *)vec);
-    vec = NULL;
     return;
 }
 
@@ -115,7 +114,7 @@ _Vec *_vec_cpy(_Vec *vec) {
 /*------------------------------------------------------------*/
 
 /*------------------------------------------------------------*/
-/* MARK: 高階関数関連 (for_each, map, filter, reduce, all, any)
+/* MARK: 高階関数関連 (foreach, map, filter, reduce, all, any)
 /*------------------------------------------------------------*/
 
 /*------------------------------------------------------------*/

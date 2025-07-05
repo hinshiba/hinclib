@@ -10,6 +10,16 @@
 
 vec_def(int);
 
+void print_int(int *n) {
+    printf("%d\n", *n);
+    return;
+}
+
+void duble_int(int *n) {
+    *n = *n * 2;
+    return;
+}
+
 int main(void) {
     vec_int *vec = vec_int_from((int[]){1, 2, 3}, 3);
     printf("%zu\n", vec->data_size);
@@ -26,5 +36,11 @@ int main(void) {
     *a = 10;
     printf("%d\n", *vec_int_get(vec, 1));
     printf("%d\n", *vec_int_get(vec, 2));
+    printf("\n");
+    vec_int_foreach(vec, print_int);
+    printf("\n");
+    vec_int_foreach(vec, duble_int);
+    vec_int_foreach(vec, print_int);
+    printf("\n");
     vec_free(vec);
 }
