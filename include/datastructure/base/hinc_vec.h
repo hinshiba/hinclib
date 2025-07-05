@@ -81,6 +81,10 @@ _Vec *_vec_cpy(_Vec *vec);
         return vec->data[_vec_pop((_Vec *)vec)];                      \
     }                                                                 \
                                                                       \
+    void vec_##Type##_resize(vec_##Type *vec, size_t len) {           \
+        return _vec_resize((_Vec *)vec, len);                         \
+    }                                                                 \
+                                                                      \
     vec_##Type *vec_##Type##_cpy(vec_##Type *vec) {                   \
         return (vec_##Type *)_vec_cpy((_Vec *)vec);                   \
     }
