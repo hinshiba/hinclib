@@ -23,4 +23,5 @@ int main(void) {
     int *a = vec_int_get_mut(vec, 1);
     *a = 10;
     printf("%d\n", *vec_int_get(vec, 3));
+    vec_free(vec);
 }

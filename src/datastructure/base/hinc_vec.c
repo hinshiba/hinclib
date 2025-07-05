@@ -44,8 +44,10 @@ _Vec *_vec_from(void *data, size_t data_size, size_t len) {
     return vec;
 }
 
-void _vec_free(_Vec *vec) {
-    fprintf(stderr, "todo func\n");
+void vec_free(void *vec) {
+    free(((_Vec *)vec)->data);
+    free((_Vec *)vec);
+    vec = NULL;
     return;
 }
 

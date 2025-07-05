@@ -13,7 +13,7 @@ typedef struct {
 
 _Vec *_vec_new(size_t data_size, size_t len);
 _Vec *_vec_from(void *data, size_t data_size, size_t len);
-// void vec_free(Vec *vec);
+void vec_free(void *vec);
 
 size_t _vec_get(const _Vec *vec, size_t idx);
 size_t _vec_get_mut(_Vec *vec, size_t idx);
