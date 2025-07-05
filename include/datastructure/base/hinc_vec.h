@@ -12,7 +12,7 @@ typedef struct {
     void *data;
     size_t data_size;
     size_t len;   /// 要素数
-    size_t size;  /// 割り当て済みサイズ
+    size_t size;  /// 割り当て済み要素数
 } _Vec;
 
 _Vec *_vec_new(size_t data_size, size_t len);
@@ -21,12 +21,12 @@ _Vec *_vec_from(void *data, size_t data_size, size_t len);
 // void vec_free(Vec *vec);
 size_t _vec_get(const _Vec *vec, size_t idx);
 // void *vec_set(Vec *vec, size_t index, void *data);
-// int vec_push(Vec *vec, void *data);
+size_t _vec_push(_Vec *vec);
 // void *vec_pop(Vec *vec);
 // int vec_insert(Vec *vec, size_t index, void *data);
 // void *vec_remove(Vec *vec, size_t index);
 // // int vec_reserve(Vec *vec, size_t len);
-// int vec_resize(Vec *vec, size_t len);
+void _vec_resize(_Vec *vec, size_t len);
 // int vec_shrink(Vec *vec);
 // Vec *vec_copy(Vec *vec);
 // Vec *vec_slice(Vec *vec, size_t start, size_t end);
@@ -63,14 +63,22 @@ size_t _vec_get(const _Vec *vec, size_t idx);
         size_t len;                                              \
         size_t size;                                             \
     } vec_##Type;                                                \
+                                                                 \
     vec_##Type *vec_##Type##_newType(size_t len) {               \
         return (vec_##Type *)_vec_new(sizeof(Type), len);        \
     }                                                            \
+                                                                 \
     vec_##Type *vec_##Type##_from(Type data[], size_t len) {     \
         return (vec_##Type *)_vec_from(data, sizeof(Type), len); \
     }                                                            \
+                                                                 \
     const Type *vec_##Type##_get(vec_##Type *vec, size_t idx) {  \
         return &vec->data[_vec_get((_Vec *)vec, idx)];           \
+    }                                                            \
+                                                                 \
+    void vec_##Type##_push(vec_##Type *vec, const Type elem) {   \
+        vec->data[_vec_push((_Vec *)vec)] = elem;                \
+        return;                                                  \
     }
 
 #endif  // HINC_VEC_H

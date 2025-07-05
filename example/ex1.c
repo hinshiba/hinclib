@@ -19,5 +19,6 @@ int main(void) {
     printf("%d\n", *vec_int_get(vec, 0));
     printf("%d\n", *vec_int_get(vec, 1));
     printf("%d\n", *vec_int_get(vec, 2));
-    printf("%d\n", *vec_int_get(vec, 3));  // out of range
+    vec_int_push(vec, 100);
+    printf("%d\n", *vec_int_get(vec, 3));
 }

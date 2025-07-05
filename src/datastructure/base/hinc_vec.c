@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define VEC_BLOCK_SIZE 128
+
 /*------------------------------------------------------------*/
 /* MARK: 汎用
 /*------------------------------------------------------------*/
@@ -26,14 +28,13 @@ void _must_in_len(const _Vec *vec, size_t idx) {
 _Vec *_vec_new(size_t data_size, size_t len) {
     _Vec *vec = malloc(sizeof(_Vec));
     if (vec == NULL) {
-        perror("malloc miss in _vec_new\n");
+        perror("malloc miss in _vec_new vec\n");
         exit(EXIT_FAILURE);
     }
-    size_t size = data_size * len;
-    vec->data = malloc(size);
+    vec->data = NULL;
     vec->data_size = data_size;
     vec->len = len;
-    vec->size = size;
+    _vec_resize(vec, len);
     return vec;
 }
 
@@ -62,9 +63,28 @@ size_t _vec_get(const _Vec *vec, size_t idx) {
 /* MARK: pushとpop
 /*------------------------------------------------------------*/
 
+size_t _vec_push(_Vec *vec) {
+    if (vec->len == vec->size) {
+        _vec_resize(vec, vec->len + 1);
+    }
+    return vec->len++;
+}
+
 /*------------------------------------------------------------*/
 /* MARK: resize関連 (resize, shrink)
 /*------------------------------------------------------------*/
+
+void _vec_resize(_Vec *vec, size_t len) {
+    /* lenが入るもっとも小さなVEC_BLOCK_SIZEの倍数を探す */
+    size_t size = (len & ~(VEC_BLOCK_SIZE - 1)) + VEC_BLOCK_SIZE;
+    vec->data = realloc(vec->data, size * vec->data_size);
+    if (vec->data == NULL) {
+        perror("realloc miss in _vec_resize\n");
+        exit(EXIT_FAILURE);
+    }
+    vec->size = size;
+    return;
+}
 
 /*------------------------------------------------------------*/
 /* MARK: sliice関連 (slice)
@@ -84,8 +104,4 @@ size_t _vec_get(const _Vec *vec, size_t idx) {
 
 /*------------------------------------------------------------*/
 /* MARK: 高階関数関連 ()
-/*------------------------------------------------------------*/
-
-/*------------------------------------------------------------*/
-/* MARK: マクロ
 /*------------------------------------------------------------*/
