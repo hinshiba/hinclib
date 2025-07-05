@@ -52,33 +52,33 @@ void _vec_resize(_Vec *vec, size_t len);
 // *)); char *vec_join(Vec *vec, const char *sep); Vec *vec_from(void *data,
 // size_t len, size_t data_size); Vec *vec_of(size_t data_size, int count, ...);
 
-#define vec_def(Type)                                            \
-    typedef struct {                                             \
-        Type *data;                                              \
-        size_t data_size;                                        \
-        size_t len;                                              \
-        size_t size;                                             \
-    } vec_##Type;                                                \
-                                                                 \
-    vec_##Type *vec_##Type##_new(size_t len) {                   \
-        return (vec_##Type *)_vec_new(sizeof(Type), len);        \
-    }                                                            \
-                                                                 \
-    vec_##Type *vec_##Type##_from(Type data[], size_t len) {     \
-        return (vec_##Type *)_vec_from(data, sizeof(Type), len); \
-    }                                                            \
-                                                                 \
-    const Type *vec_##Type##_get(vec_##Type *vec, size_t idx) {  \
-        return &vec->data[_vec_get((_Vec *)vec, idx)];           \
-    }                                                            \
-                                                                 \
-    Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {    \
-        return &vec->data[_vec_get_mut((_Vec *)vec, idx)];       \
-    }                                                            \
-                                                                 \
-    void vec_##Type##_push(vec_##Type *vec, const Type elem) {   \
-        vec->data[_vec_push((_Vec *)vec)] = elem;                \
-        return;                                                  \
+#define vec_def(Type)                                                 \
+    typedef struct {                                                  \
+        Type *data;                                                   \
+        size_t data_size;                                             \
+        size_t len;                                                   \
+        size_t size;                                                  \
+    } vec_##Type;                                                     \
+                                                                      \
+    vec_##Type *vec_##Type##_new(size_t len) {                        \
+        return (vec_##Type *)_vec_new(sizeof(Type), len);             \
+    }                                                                 \
+                                                                      \
+    vec_##Type *vec_##Type##_from(Type data[], size_t len) {          \
+        return (vec_##Type *)_vec_from(data, sizeof(Type), len);      \
+    }                                                                 \
+                                                                      \
+    const Type *vec_##Type##_get(const vec_##Type *vec, size_t idx) { \
+        return &vec->data[_vec_get((_Vec *)vec, idx)];                \
+    }                                                                 \
+                                                                      \
+    Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {         \
+        return &vec->data[_vec_get_mut((_Vec *)vec, idx)];            \
+    }                                                                 \
+                                                                      \
+    void vec_##Type##_push(vec_##Type *vec, const Type elem) {        \
+        vec->data[_vec_push((_Vec *)vec)] = elem;                     \
+        return;                                                       \
     }
 
 #endif  // HINC_VEC_H
