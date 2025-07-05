@@ -25,7 +25,7 @@ void _must_in_len(const _Vec *vec, size_t idx) {
 /* MARK: 作成と消去 (new, from, free)
 /*------------------------------------------------------------*/
 
-_Vec *_vec_new(size_t data_size, size_t len) {
+_Vec *_vec_new(size_t data_size, size_t size) {
     _Vec *vec = malloc(sizeof(_Vec));
     if (vec == NULL) {
         perror("malloc miss in _vec_new vec\n");
@@ -33,14 +33,15 @@ _Vec *_vec_new(size_t data_size, size_t len) {
     }
     vec->data = NULL;
     vec->data_size = data_size;
-    vec->len = len;
-    _vec_resize(vec, len);
+    vec->len = 0;
+    _vec_resize(vec, size);
     return vec;
 }
 
 _Vec *_vec_from(void *data, size_t data_size, size_t len) {
     _Vec *vec = _vec_new(data_size, len);
     memcpy(vec->data, data, data_size * len);
+    vec->len = len;
     return vec;
 }
 
