@@ -76,6 +76,14 @@ size_t _vec_push(_Vec *vec) {
     return vec->len++;
 }
 
+size_t _vec_pop(_Vec *vec) {
+    if (vec->len == 0) {
+        fprintf(stderr, "try pop but vec is empty\n");
+        exit(EXIT_FAILURE);
+    }
+    return --vec->len;
+}
+
 /*------------------------------------------------------------*/
 /* MARK: resize関連 (resize, shrink)
 /*------------------------------------------------------------*/

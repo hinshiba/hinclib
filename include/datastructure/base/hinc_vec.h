@@ -19,7 +19,7 @@ size_t _vec_get(const _Vec *vec, size_t idx);
 size_t _vec_get_mut(_Vec *vec, size_t idx);
 
 size_t _vec_push(_Vec *vec);
-// void *vec_pop(Vec *vec);
+size_t _vec_pop(_Vec *vec);
 
 void _vec_resize(_Vec *vec, size_t len);
 // void vec_shrink(_Vec *vec);
@@ -75,6 +75,10 @@ void _vec_resize(_Vec *vec, size_t len);
     void vec_##Type##_push(vec_##Type *vec, const Type elem) {        \
         vec->data[_vec_push((_Vec *)vec)] = elem;                     \
         return;                                                       \
+    }                                                                 \
+                                                                      \
+    Type vec_##Type##_pop(vec_##Type *vec) {                          \
+        return vec->data[_vec_pop((_Vec *)vec)];                      \
     }
 
 #endif  // HINC_VEC_H
