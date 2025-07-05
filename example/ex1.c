@@ -38,6 +38,13 @@ int main(void) {
     printf("vec[1]: %d\n", *vec_int_get(vec, 1));
     printf("vec[2]: %d\n", *vec_int_get(vec, 2));
     printf("\n");
+
+    /* 実行時に out of range Error */
+    // printf("vec[2]: %d\n", *vec_int_get(vec, 3));
+
+    /* 変更可能な左辺値でないエラー */
+    // *vec_int_get(vec, 2) = 10;
+
     /* 変更できるポインタの取得 */
     *vec_int_get_mut(vec, 1) = 10;
 
