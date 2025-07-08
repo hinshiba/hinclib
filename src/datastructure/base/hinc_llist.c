@@ -126,7 +126,7 @@ void _list_expand(_List *list, size_t len) {
 
 _List *_list_cpy(_List *list) {
     _List *new_list = _list_new(list->data_size, list->len);
-    memcpy(new_list->data, list->data, list->data_size * list->len);
+    /* 実質的にpushの繰り返し */
     return new_list;
 }
 
