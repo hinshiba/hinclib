@@ -11,9 +11,13 @@ typedef struct {
 } _Node;
 
 typedef struct {
+    _Node head;
+    _Node *tail;
     size_t data_size;
-    size_t len;   /// 要素数
-    size_t size;  /// 割り当て済み要素数
+    size_t len;          /// 要素数
+    size_t size;         /// 割り当て済み要素数
+    _Node *_free_head;   /// 割り当て済み
+    _Node *_block_head;  /// 解放すべきブロックの先頭
 } _List;
 
 _List *_list_new(size_t data_size, size_t len);

@@ -8,7 +8,7 @@
 
 #include "datastructure/base/hinc_list.h"
 
-#define VEC_BLOCK_SIZE 128
+#define LIST_BLOCK_SIZE 32
 
 /*------------------------------------------------------------*/
 /* MARK: 汎用
@@ -31,22 +31,29 @@ _List *_list_new(size_t data_size, size_t size) {
         perror("malloc miss in _list_new list\n");
         exit(EXIT_FAILURE);
     }
-    list->data = NULL;
+    list->tail = &list->head;
     list->data_size = data_size;
     list->len = 0;
+    list->_free_head = NULL;
+    list->_block_head = NULL;
     _list_resize(list, size);
     return list;
 }
 
 _List *_list_from(void *data, size_t data_size, size_t len) {
     _List *list = _list_new(data_size, len);
-    memcpy(list->data, data, data_size * len);
+    /* 実質的にpushの繰り返し */
     list->len = len;
     return list;
 }
 
 void list_free(void *list) {
-    free(((_List *)list)->data);
+    /* 最初に設定した nextがNULLのblockまでfree */
+    for (_Node *block_node = ((_List *)list)->_block_head; block_node;
+         block_node = block_node->next) {
+        free(block_node);
+    }
+
     free((_List *)list);
     return;
 }
@@ -95,15 +102,19 @@ size_t _list_pop(_List *list) {
 void _list_expand(_List *list, size_t len) {
     /* lenが入るもっとも小さなLIST_BLOCK_SIZEの倍数を探す */
     size_t size = (len & ~(LIST_BLOCK_SIZE - 1)) + LIST_BLOCK_SIZE;
-    _Node *pool = malloc(size * sizeof(_Node));
+    _Node *pool = malloc((size + 1) * sizeof(_Node));
     if (pool == NULL) {
         perror("malloc miss in _list_expand\n");
         exit(EXIT_FAILURE);
     }
+    /* block listに追加 */
+    pool->next = list->_block_head;
+    list->_block_head = pool;
+
     /* free listの先頭に追加 */
-    for (size_t i = 0; i < size; ++i) {
-        (pool + i)->next = list->free_head;
-        list->free_head = (pool + i);
+    for (size_t i = 1; i < size + 1; ++i) {
+        (pool + i)->next = list->_free_head;
+        list->_free_head = (pool + i);
     }
     list->size += size;
     return;
