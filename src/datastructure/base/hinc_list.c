@@ -1,3 +1,5 @@
+#include "datastructure/base/hinc_list.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -5,8 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "datastructure/base/hinc_list.h"
 
 #define LIST_BLOCK_SIZE 32
 
