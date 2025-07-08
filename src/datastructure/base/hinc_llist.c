@@ -85,18 +85,27 @@ size_t _list_pop(_List *list) {
 }
 
 /*------------------------------------------------------------*/
-/* MARK: resize関連 (resize, shrink)
+/* MARK: resize関連 (expand, resize, shrink)
 /*------------------------------------------------------------*/
 
-void _list_resize(_List *list, size_t len) {
-    /* lenが入るもっとも小さなVEC_BLOCK_SIZEの倍数を探す */
-    size_t size = (len & ~(VEC_BLOCK_SIZE - 1)) + VEC_BLOCK_SIZE;
-    list->data = realloc(list->data, size * list->data_size);
-    if (list->data == NULL) {
-        perror("realloc miss in _list_resize\n");
+/**
+ * @fn
+ * @param len: 追加するサイズ
+ */
+void _list_expand(_List *list, size_t len) {
+    /* lenが入るもっとも小さなLIST_BLOCK_SIZEの倍数を探す */
+    size_t size = (len & ~(LIST_BLOCK_SIZE - 1)) + LIST_BLOCK_SIZE;
+    _Node *pool = malloc(size * sizeof(_Node));
+    if (pool == NULL) {
+        perror("malloc miss in _list_expand\n");
         exit(EXIT_FAILURE);
     }
-    list->size = size;
+    /* free listの先頭に追加 */
+    for (size_t i = 0; i < size; ++i) {
+        (pool + i)->next = list->free_head;
+        list->free_head = (pool + i);
+    }
+    list->size += size;
     return;
 }
 
