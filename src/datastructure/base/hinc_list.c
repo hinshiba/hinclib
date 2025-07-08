@@ -29,7 +29,7 @@ void _must_in_len(const _List *list, size_t idx) {
  */
 _Node *_get_free_node(_List *list) {
     if (list->len == list->size) {
-        _list_resize(list, 1);
+        _list_expand(list, 1);
     }
     _Node *new = list->_free_head;
     list->_free_head = list->_free_head->next;
@@ -68,9 +68,10 @@ _List *_list_new(size_t node_size, size_t size) {
     list->tail = &list->head;
     list->node_size = node_size;
     list->len = 0;
+    list->size = 0;
     list->_free_head = NULL;
     list->_block_head = NULL;
-    _list_resize(list, size);
+    _list_expand(list, size);
     return list;
 }
 
@@ -160,8 +161,17 @@ void _list_expand(_List *list, size_t len) {
     list->_block_head = pool;
 
     /* free listの先頭に追加 */
-    for (size_t i = 1; i < size + 1; ++i) {
+    /* 一回目は先頭NULLかもしれないので確認 */
+    size_t i = 1;
+    (pool + i)->next = list->_free_head;
+    if (list->_free_head) {
+        list->_free_head->prev = (pool + i);
+    }
+    list->_free_head = (pool + i);
+
+    for (; i < size + 1; ++i) {
         (pool + i)->next = list->_free_head;
+        list->_free_head->prev = (pool + i);
         list->_free_head = (pool + i);
     }
     list->size += size;

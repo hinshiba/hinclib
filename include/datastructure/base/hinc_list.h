@@ -4,11 +4,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct {
+typedef struct _Node _Node;
+
+struct _Node {
     void *data;
-    struct _Node *next;
-    struct Node *prev;
-} _Node;
+    _Node *next;
+    _Node *prev;
+};
 
 typedef struct {
     _Node head;
