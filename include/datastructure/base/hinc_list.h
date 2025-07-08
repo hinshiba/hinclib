@@ -7,23 +7,23 @@
 typedef struct _Node _Node;
 
 struct _Node {
-    void *data;
     _Node *next;
     _Node *prev;
+    char data[];
 };
 
 typedef struct {
-    _Node head;
     _Node *tail;
-    size_t node_size;
+    size_t data_size;
     size_t len;          /// 要素数
     size_t size;         /// 割り当て済み要素数
     _Node *_free_head;   /// 割り当て済み
     _Node *_block_head;  /// 解放すべきブロックの先頭
+    _Node head;
 } _List;
 
-_List *_list_new(size_t node_size, size_t len);
-_List *_list_from(void *data, size_t node_size, size_t len);
+_List *_list_new(size_t data_size, size_t len);
+_List *_list_from(void *data, size_t data_size, size_t len);
 void list_free(void *list);
 
 size_t _list_get(const _List *list, size_t idx);
@@ -62,24 +62,31 @@ void _list_expand(_List *list, size_t len);
 // void *list_remove(Vec *list, size_t index);
 
 #define list_def(Type)                                                 \
-    typedef struct {                                                   \
+    typedef struct _node_internal_##Type _node_internal_##Type;        \
+    struct _node_internal_##Type {                                     \
+        struct node_##Type *next;                                      \
+        struct node_##Type *prev;                                      \
+    };                                                                 \
+                                                                       \
+    typedef struct node_##Type node_##Type;                            \
+    struct node_##Type {                                               \
+        struct node_##Type *next;                                      \
+        struct node_##Type *prev;                                      \
         Type data;                                                     \
-        struct _Node *next;                                            \
-        struct Node *prev;                                             \
-    } node_##Type;                                                     \
+    };                                                                 \
                                                                        \
     typedef struct {                                                   \
-        _Node head;                                                    \
-        _Node *tail;                                                   \
-        size_t node_size;                                              \
+        node_##Type *tail;                                             \
+        size_t data_size;                                              \
         size_t len;                                                    \
         size_t size;                                                   \
-        _Node *_free_head;                                             \
-        _Node *_block_head;                                            \
+        _node_internal_##Type *_free_head;                             \
+        _node_internal_##Type *_block_head;                            \
+        _node_internal_##Type head;                                    \
     } list_##Type;                                                     \
                                                                        \
     list_##Type *list_##Type##_new(size_t len) {                       \
-        return (list_##Type *)_list_new(sizeof(node_##Type), len);     \
+        return (list_##Type *)_list_new(sizeof(Type), len);            \
     }                                                                  \
                                                                        \
     list_##Type *list_##Type##_from(Type data[], size_t len) {         \
@@ -88,7 +95,7 @@ void _list_expand(_List *list, size_t len);
             *(Type *)(_list_push_back((_List *)list)->data) = data[i]; \
         }                                                              \
                                                                        \
-        return (list_##Type *)_list_from(data, sizeof(Type), len);     \
+        return list;                                                   \
     }                                                                  \
                                                                        \
     void list_##Type##_push_back(list_##Type *list, const Type elem) { \

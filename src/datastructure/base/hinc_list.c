@@ -59,14 +59,14 @@ void _ret_free_node(_List *list, _Node *node) {
 /* MARK: 作成と消去 (new, from, free)
 /*------------------------------------------------------------*/
 
-_List *_list_new(size_t node_size, size_t size) {
+_List *_list_new(size_t data_size, size_t size) {
     _List *list = malloc(sizeof(_List));
     if (list == NULL) {
         perror("malloc miss in _list_new list\n");
         exit(EXIT_FAILURE);
     }
     list->tail = &list->head;
-    list->node_size = node_size;
+    list->data_size = data_size;
     list->len = 0;
     list->size = 0;
     list->_free_head = NULL;
@@ -75,8 +75,8 @@ _List *_list_new(size_t node_size, size_t size) {
     return list;
 }
 
-_List *_list_from(void *data, size_t node_size, size_t len) {
-    _List *list = _list_new(node_size, len);
+_List *_list_from(void *data, size_t data_size, size_t len) {
+    _List *list = _list_new(data_size, len);
     /* 実質的にpushの繰り返し，データサイズの問題で外で書き込む */
     list->len = len;
     return list;
@@ -151,28 +151,32 @@ _Node *_list_pop_back(_List *list) {
 void _list_expand(_List *list, size_t len) {
     /* lenが入るもっとも小さなLIST_BLOCK_SIZEの倍数を探す */
     size_t size = (len & ~(LIST_BLOCK_SIZE - 1)) + LIST_BLOCK_SIZE;
-    _Node *pool = malloc((size + 1) * list->node_size);
+    _Node *pool =
+        malloc((list->data_size + sizeof(_Node)) * size + sizeof(_Node));
     if (pool == NULL) {
         perror("malloc miss in _list_expand\n");
         exit(EXIT_FAILURE);
     }
     /* block listに追加 */
     pool->next = list->_block_head;
-    list->_block_head = pool;
+    list->_block_head = pool++;
 
     /* free listの先頭に追加 */
     /* 一回目は先頭NULLかもしれないので確認 */
-    size_t i = 1;
-    (pool + i)->next = list->_free_head;
+    pool->next = list->_free_head;
     if (list->_free_head) {
-        list->_free_head->prev = (pool + i);
+        list->_free_head->prev = pool;
     }
-    list->_free_head = (pool + i);
+    list->_free_head = pool++;
+    /* dataのポインタを飛ばす */
+    pool = (_Node *)((char *)pool + list->data_size);
 
-    for (; i < size + 1; ++i) {
-        (pool + i)->next = list->_free_head;
-        list->_free_head->prev = (pool + i);
-        list->_free_head = (pool + i);
+    for (size_t i = 1; i < size; ++i) {
+        pool->next = list->_free_head;
+        list->_free_head->prev = pool;
+        list->_free_head = pool++;
+        /* dataの領域を飛ばす */
+        pool = (_Node *)((char *)pool + list->data_size);
     }
     list->size += size;
     return;
@@ -183,7 +187,7 @@ void _list_expand(_List *list, size_t len) {
 /*------------------------------------------------------------*/
 
 _List *_list_cpy(_List *list) {
-    _List *new_list = _list_new(list->node_size, list->len);
+    _List *new_list = _list_new(list->data_size, list->len);
     /* 実質的にpushの繰り返し */
     return new_list;
 }

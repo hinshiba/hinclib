@@ -28,7 +28,7 @@ list_def(int);
 int main(void) {
     /* 新しいlistの宣言と初期化 */
     list_int *list = list_int_from((int[]){1, 2, 3}, 3);
-    printf("data_size: %zu\n", list->node_size);
+    printf("data_size: %zu\n", list->data_size);
     printf("len: %zu\n", list->len);
     printf("size: %zu\n", list->size);
     printf("\n");
