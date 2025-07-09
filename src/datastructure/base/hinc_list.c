@@ -196,6 +196,133 @@ _List *_list_cpy(_List *list) {
 /* MARK: アルゴリズム関連 (bseach, sort, index_of)
 /*------------------------------------------------------------*/
 
+_Node *_list_marge(_Node *left, _Node *right,
+                   int (*compar)(const void *, const void *)) {
+    if (!left) return right;
+    if (!right) return left;
+
+    _Node *head;
+    _Node *tail;
+
+    /* 先頭を決定 */
+    if (compar(left->data, right->data) <= 0) {
+        head = tail = left;
+        left = left->next;
+    } else {
+        head = tail = right;
+        right = right->next;
+    }
+    head->prev = NULL;
+
+    /* 残りのノードをマージ */
+    while (left && right) {
+        if (compar(left->data, right->data) <= 0) {
+            tail->next = left;
+            left->prev = tail;
+            tail = left;
+            left = left->next;
+        } else {
+            tail->next = right;
+            right->prev = tail;
+            tail = right;
+            right = right->next;
+        }
+    }
+
+    /* 残っている場合の処理 */
+    if (left) {
+        tail->next = left;
+        left->prev = tail;
+    } else if (right) {
+        tail->next = right;
+        right->prev = tail;
+    }
+
+    return head;
+}
+
+void _list_sort(_List *list, int (*compar)(const void *, const void *)) {
+    _Node *head = list->head.next;
+    if (list->len < 1) {
+        return; /* ソート不要 */
+    }
+
+    _Node *left;
+    _Node *right;
+    _Node *tail;
+    _Node *current;
+    size_t size = 1;
+
+    while (1) {
+        current = head;
+        head = NULL;
+        tail = NULL;
+
+        size_t processed = 0;
+
+        while (current) {
+            ++processed;
+            left = current;
+
+            /* rightを探す */
+            right = current;
+            for (int i = 0; i < size && right; i++) {
+                right = right->next;
+            }
+            if (right) {
+                /* rightが有りそうなら分割 */
+                _Node *prev_right = right->prev;
+                prev_right->next = NULL;
+
+                /* 次のループの開始点を保存 */
+                current = right;
+                for (int i = 0; i < size && current; i++) {
+                    current = current->next;
+                }
+
+                /* rightもNULL終端に */
+                if (current) {
+                    _Node *prev_current = current->prev;
+                    prev_current->next = NULL;
+                }
+            } else {
+                current = NULL;
+            }
+
+            _Node *merged = _list_marge(left, right, compar);
+
+            /* for dbg
+            for (_Node *tmp = merged; tmp; tmp = tmp->next) {
+                printf("%d, ", *(int *)tmp->data);
+            }
+            printf("\n");
+            */
+
+            /* 全体のリストに連結 */
+            if (!head) {
+                head = merged;
+                tail = merged;
+            } else {
+                tail->next = merged;
+                merged->prev = tail;
+            }
+
+            /* tailをマージ後リストの末尾に移動 */
+            while (tail && tail->next) {
+                tail = tail->next;
+            }
+        }
+
+        /* マージが1回しか行われなかった場合、ソート完了 */
+        if (processed <= 1) {
+            break;
+        }
+        size *= 2;
+    }
+
+    list->head.next = head;
+}
+
 /*------------------------------------------------------------*/
 /* MARK: 高階関数関連 (foreach, map, filter, reduce, all, any)
 /*------------------------------------------------------------*/

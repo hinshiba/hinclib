@@ -47,7 +47,7 @@ void _list_expand(_List *list, size_t len);
 // void list_reverse(_List *list);
 // void list_concat(_List *list1, _List *list2);
 
-// void list_sort(Vec *list, int (*cmp)(const void *, const void *));
+void _list_sort(_List *list, int (*compar)(const void *, const void *));
 // int list_index_of(Vec *list, void *data, int (*cmp)(const void *, const void
 // *));
 
@@ -61,50 +61,57 @@ void _list_expand(_List *list, size_t len);
 // int list_insert(Vec *list, size_t index, void *data);
 // void *list_remove(Vec *list, size_t index);
 
-#define list_def(Type)                                                 \
-    typedef struct _node_internal_##Type _node_internal_##Type;        \
-    struct _node_internal_##Type {                                     \
-        struct node_##Type *next;                                      \
-        struct node_##Type *prev;                                      \
-    };                                                                 \
-                                                                       \
-    typedef struct node_##Type node_##Type;                            \
-    struct node_##Type {                                               \
-        struct node_##Type *next;                                      \
-        struct node_##Type *prev;                                      \
-        Type data;                                                     \
-    };                                                                 \
-                                                                       \
-    typedef struct {                                                   \
-        node_##Type *tail;                                             \
-        size_t data_size;                                              \
-        size_t len;                                                    \
-        size_t size;                                                   \
-        _node_internal_##Type *_free_head;                             \
-        _node_internal_##Type *_block_head;                            \
-        _node_internal_##Type head;                                    \
-    } list_##Type;                                                     \
-                                                                       \
-    list_##Type *list_##Type##_new(size_t len) {                       \
-        return (list_##Type *)_list_new(sizeof(Type), len);            \
-    }                                                                  \
-                                                                       \
-    list_##Type *list_##Type##_from(Type data[], size_t len) {         \
-        list_##Type *list = list_##Type##_new(len);                    \
-        for (size_t i = 0; i < len; ++i) {                             \
-            *(Type *)(_list_push_back((_List *)list)->data) = data[i]; \
-        }                                                              \
-                                                                       \
-        return list;                                                   \
-    }                                                                  \
-                                                                       \
-    void list_##Type##_push_back(list_##Type *list, const Type elem) { \
-        *(Type *)(_list_push_back((_List *)list)->data) = elem;        \
-        return;                                                        \
-    }                                                                  \
-                                                                       \
-    Type list_##Type##_pop_back(list_##Type *list) {                   \
-        return *(Type *)(_list_pop_back((_List *)list)->data);         \
+#define list_def(Type)                                                   \
+    typedef struct _node_internal_##Type _node_internal_##Type;          \
+    struct _node_internal_##Type {                                       \
+        struct node_##Type *next;                                        \
+        struct node_##Type *prev;                                        \
+    };                                                                   \
+                                                                         \
+    typedef struct node_##Type node_##Type;                              \
+    struct node_##Type {                                                 \
+        struct node_##Type *next;                                        \
+        struct node_##Type *prev;                                        \
+        Type data;                                                       \
+    };                                                                   \
+                                                                         \
+    typedef struct {                                                     \
+        node_##Type *tail;                                               \
+        size_t data_size;                                                \
+        size_t len;                                                      \
+        size_t size;                                                     \
+        _node_internal_##Type *_free_head;                               \
+        _node_internal_##Type *_block_head;                              \
+        _node_internal_##Type head;                                      \
+    } list_##Type;                                                       \
+                                                                         \
+    list_##Type *list_##Type##_new(size_t len) {                         \
+        return (list_##Type *)_list_new(sizeof(Type), len);              \
+    }                                                                    \
+                                                                         \
+    list_##Type *list_##Type##_from(Type data[], size_t len) {           \
+        list_##Type *list = list_##Type##_new(len);                      \
+        for (size_t i = 0; i < len; ++i) {                               \
+            *(Type *)(_list_push_back((_List *)list)->data) = data[i];   \
+        }                                                                \
+                                                                         \
+        return list;                                                     \
+    }                                                                    \
+                                                                         \
+    void list_##Type##_push_back(list_##Type *list, const Type elem) {   \
+        *(Type *)(_list_push_back((_List *)list)->data) = elem;          \
+        return;                                                          \
+    }                                                                    \
+                                                                         \
+    Type list_##Type##_pop_back(list_##Type *list) {                     \
+        return *(Type *)(_list_pop_back((_List *)list)->data);           \
+    }                                                                    \
+                                                                         \
+    void list_##Type##_sort(list_##Type *list,                           \
+                            int (*compar)(const Type *, const Type *)) { \
+        _list_sort((_List *)list,                                        \
+                   (int (*)(const void *, const void *))compar);         \
+        return;                                                          \
     }
 
 #endif  // HINC_LIST_H
