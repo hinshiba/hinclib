@@ -97,9 +97,22 @@ void list_free(void *list) {
 /* MARK: getとset
 /*------------------------------------------------------------*/
 
-size_t _list_get(const _List *list, size_t idx) {
+_Node *_list_get(const _List *list, size_t idx) {
+    _Node *node;
     _must_in_len(list, idx);
-    return idx;
+    if (idx * 2 < list->len) {
+        /* 前からたどったほうが早い */
+        node = list->head.next;
+        for (size_t i = 0; i < idx; ++i) {
+            node = node->next;
+        }
+    } else {
+        node = list->tail;
+        for (size_t i = list->len - 1; i != idx; --i) {
+            node = node->prev;
+        }
+    }
+    return node;
 }
 
 size_t _list_get_mut(_List *list, size_t idx) {

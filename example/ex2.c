@@ -33,7 +33,7 @@ int main(void) {
 
     list_int_sort(list, compint);
 
-    printf("pop: %d\n", list_int_pop_back(list));
+    printf("pop: %d\n", *list_int_get(list, 0));
     printf("pop: %d\n", list_int_pop_back(list));
     printf("pop: %d\n", list_int_pop_back(list));
     printf("pop: %d\n", list_int_pop_back(list));

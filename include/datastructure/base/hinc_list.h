@@ -26,7 +26,7 @@ _List *_list_new(size_t data_size, size_t len);
 _List *_list_from(void *data, size_t data_size, size_t len);
 void list_free(void *list);
 
-size_t _list_get(const _List *list, size_t idx);
+_Node *_list_get(const _List *list, size_t idx);
 size_t _list_get_mut(_List *list, size_t idx);
 
 // size_t _list_push_front(_List *list);
@@ -96,6 +96,10 @@ void _list_sort(_List *list, int (*compar)(const void *, const void *));
         }                                                                \
                                                                          \
         return list;                                                     \
+    }                                                                    \
+                                                                         \
+    const Type *list_##Type##_get(const list_##Type *list, size_t idx) { \
+        return &(((node_##Type *)_list_get((_List *)list, idx))->data);  \
     }                                                                    \
                                                                          \
     void list_##Type##_push_back(list_##Type *list, const Type elem) {   \
