@@ -85,6 +85,24 @@ void _list_sort(_List *list, int (*compar)(const void *, const void *));
         _node_internal_##Type head;                                      \
     } list_##Type;                                                       \
                                                                          \
+    /*Node関連関数*/                                                     \
+                                                                         \
+    bool node_##Type##_next(node_##Type **node) {                        \
+        if ((*node)->next) {                                             \
+            *node = (*node)->next;                                       \
+            return true;                                                 \
+        }                                                                \
+        return false;                                                    \
+    }                                                                    \
+                                                                         \
+    bool node_##Type##_prev(node_##Type **node) {                        \
+        if ((*node)->prev) {                                             \
+            *node = (*node)->prev;                                       \
+            return true;                                                 \
+        }                                                                \
+        return false;                                                    \
+    }                                                                    \
+                                                                         \
     list_##Type *list_##Type##_new(size_t len) {                         \
         return (list_##Type *)_list_new(sizeof(Type), len);              \
     }                                                                    \

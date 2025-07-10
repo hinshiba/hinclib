@@ -37,7 +37,9 @@ int main(void) {
     printf("pop: %d\n", list_int_pop_back(list));
     printf("pop: %d\n", list_int_pop_back(list));
     printf("pop: %d\n", list_int_pop_back(list));
-
+    node_int *node = list->head.next;
+    node_int_next(&node);
+    printf("next: %d", node->data);
     printf("\n");
     list_free(list);
 }
