@@ -84,9 +84,11 @@ _List *_list_from(void *data, size_t data_size, size_t len) {
 
 void list_free(void *list) {
     /* 最初に設定した nextがNULLのblockまでfree */
-    for (_Node *block_node = ((_List *)list)->_block_head; block_node;
-         block_node = block_node->next) {
+    _Node *tmp;
+    for (_Node *block_node = ((_List *)list)->_block_head; block_node;) {
+        tmp = block_node->next;
         free(block_node);
+        block_node = tmp;
     }
 
     free((_List *)list);
