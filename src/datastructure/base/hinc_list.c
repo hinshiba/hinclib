@@ -65,7 +65,8 @@ _List *_list_new(size_t data_size, size_t size) {
         perror("malloc miss in _list_new list\n");
         exit(EXIT_FAILURE);
     }
-    list->tail = &list->head;
+    list->head = NULL;
+    list->tail = NULL;
     list->data_size = data_size;
     list->len = 0;
     list->size = 0;
@@ -102,7 +103,7 @@ _Node *_list_get(const _List *list, size_t idx) {
     _must_in_len(list, idx);
     if (idx * 2 < list->len) {
         /* 前からたどったほうが早い */
-        node = list->head.next;
+        node = list->head;
         for (size_t i = 0; i < idx; ++i) {
             node = node->next;
         }
@@ -132,7 +133,11 @@ _Node *_list_push_back(_List *list) {
     _Node *node = _get_free_node(list);
     /* 接続操作 */
     node->prev = list->tail;
-    list->tail->next = node;
+    if (list->head) {
+        list->tail->next = node;
+    } else {
+        list->head = node;
+    }
     list->tail = node;
     return node;
 }
@@ -255,7 +260,7 @@ _Node *_list_marge(_Node *left, _Node *right,
 }
 
 void _list_sort(_List *list, int (*compar)(const void *, const void *)) {
-    _Node *head = list->head.next;
+    _Node *head = list->head;
     if (list->len < 1) {
         return; /* ソート不要 */
     }
@@ -333,7 +338,7 @@ void _list_sort(_List *list, int (*compar)(const void *, const void *)) {
         size *= 2;
     }
 
-    list->head.next = head;
+    list->head = head;
 }
 
 /*------------------------------------------------------------*/
