@@ -26,7 +26,8 @@ bool _iter_next(_Iter *iter) {
             return false;
         case _ITER_LIST:
             if (iter->_con.list_node->next) {
-                iter->ref = &iter->_con.list_node->next->data;
+                iter->_con.list_node = iter->_con.list_node->next;
+                iter->ref = &iter->_con.list_node->data;
                 return true;
             }
             return false;

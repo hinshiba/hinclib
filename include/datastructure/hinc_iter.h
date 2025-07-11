@@ -56,6 +56,6 @@ void iter_free(void *iter);
         return (iter_##Type *)iter;                               \
     }
 
-#define iter_next(iter) iter.next(&iter)
+#define iter_next(iter) iter->next(iter)
 
 #endif  // HINC_ITER_H

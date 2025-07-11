@@ -53,8 +53,8 @@ int main(void) {
     node_int_next(&node);
     printf("next: %d", node->data);
     printf("\n");
-    for (iter_int *iter = iter_int_new_from_list(list); iter < count; i++) {
-        /* code */
+    for (iter_int *iter = iter_int_new_from_list(list);; iter_next(iter)) {
+        printf("iter: %d\n", *iter->ref);
     }
 
     list_free(list);
