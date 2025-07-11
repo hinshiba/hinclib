@@ -24,9 +24,11 @@ struct _Iter {
     void *ref;
     union _IterCon _con;
     enum _IterConType _con_type;
+    bool (*next)(_Iter *);
+    bool (*prev)(_Iter *);
 };
 
-bool iter_next(_Iter *iter);
+bool _iter_next(_Iter *iter);
 
 _Iter *_iter_new(void);
 void iter_free(void *iter);
@@ -38,6 +40,8 @@ void iter_free(void *iter);
         Type *ref;                          \
         union _IterCon _con;                \
         enum _IterConType _con_type;        \
+        bool (*next)(iter_##Type *);        \
+        bool (*prev)(iter_##Type *);        \
     };
 
 // #define iter_def_for_vec(Type)
@@ -48,7 +52,10 @@ void iter_free(void *iter);
         iter->ref = &list->head->data;                            \
         iter->_con.list_node = (_Node *)list->head;               \
         iter->_con_type = _ITER_LIST;                             \
+        iter->next = (void (*)(iter_##Type *))_iter_next;         \
         return (iter_##Type *)iter;                               \
     }
+
+#define iter_next(iter) iter.next(&iter)
 
 #endif  // HINC_ITER_H

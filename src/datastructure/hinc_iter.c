@@ -11,7 +11,7 @@
 #include "datastructure/base/hinc_list.h"
 #include "datastructure/base/hinc_vec.h"
 
-bool iter_next(_Iter *iter) {
+bool _iter_next(_Iter *iter) {
     switch (iter->_con_type) {
         case _ITER_NO:
             fprintf(stderr, "this iter is not valid _ITER_NO\n");
