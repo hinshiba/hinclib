@@ -4,29 +4,51 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "datastructure/base/hinc_list.h"
+#include "datastructure/base/hinc_vec.h"
+
 typedef struct _Iter _Iter;
 
-struct _Iter {
-    bool (*next)(_Iter *);
-    bool (*prev)(_Iter *);
-    void *ref;
+enum _IterConType {
+    _ITER_NO,
+    _ITER_VEC,
+    _ITER_LIST,
 };
+
+union _IterCon {
+    _Vec *vec;
+    _Node *list_node;
+};
+
+struct _Iter {
+    void *ref;
+    union _IterCon _con;
+    enum _IterConType _con_type;
+};
+
+bool iter_next(_Iter *iter);
+
+_Iter *_iter_new(void);
+void iter_free(void *iter);
 
 #define iter_def(Type)                      \
     typedef struct iter_##Type iter_##Type; \
                                             \
     struct iter_##Type {                    \
-        bool (*next)(_Iter *);              \
-        bool (*prev)(_Iter *);              \
-        Type *data;                         \
+        Type *ref;                          \
+        union _IterCon _con;                \
+        enum _IterConType _con_type;        \
     };
 
 // #define iter_def_for_vec(Type)
 
-#define iter_def_for_list(Type) iter_##Type *iter_##Type##_new_from_list()
-
-#define iter_next(iter) iter.next((_Iter *)&iter)
-
-#define iter_prev(iter) iter.prev((_Iter *)&iter)
+#define iter_def_for_list(Type)                                   \
+    iter_##Type *iter_##Type##_new_from_list(list_##Type *list) { \
+        _Iter *iter = _iter_new();                                \
+        iter->ref = &list->head->data;                            \
+        iter->_con.list_node = (_Node *)list->head;               \
+        iter->_con_type = _ITER_LIST;                             \
+        return (iter_##Type *)iter;                               \
+    }
 
 #endif  // HINC_ITER_H

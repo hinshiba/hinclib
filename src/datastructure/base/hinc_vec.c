@@ -14,9 +14,9 @@
  * MARK: 汎用
  *------------------------------------------------------------*/
 
-bool _is_in_len(const _Vec *vec, size_t idx) { return idx < vec->len; }
-void _must_in_len(const _Vec *vec, size_t idx) {
-    if (_is_in_len(vec, idx)) return;
+bool _is_in_vec_len(const _Vec *vec, size_t idx) { return idx < vec->len; }
+void _must_in_vec_len(const _Vec *vec, size_t idx) {
+    if (_is_in_vec_len(vec, idx)) return;
     fprintf(stderr, "out of renge\n");
     exit(EXIT_FAILURE);
 }
@@ -56,12 +56,12 @@ void vec_free(void *vec) {
  *------------------------------------------------------------*/
 
 size_t _vec_get(const _Vec *vec, size_t idx) {
-    _must_in_len(vec, idx);
+    _must_in_vec_len(vec, idx);
     return idx;
 }
 
 size_t _vec_get_mut(_Vec *vec, size_t idx) {
-    _must_in_len(vec, idx);
+    _must_in_vec_len(vec, idx);
     return idx;
 }
 
