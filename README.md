@@ -8,3 +8,7 @@ C言語の疑似ジェネリクスなデータ構造とアルゴリズム．
 
 実質的には[hinshiba/practice_c](https://github.com/hinshiba/practice_c)の後継ですが，まだ移行していないものもあるかもしれません．
 
+## feature
+
+- vector
+- list
