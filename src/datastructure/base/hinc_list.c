@@ -14,9 +14,9 @@
  * MARK: 汎用
  *------------------------------------------------------------*/
 
-bool _is_in_len(const _List *list, size_t idx) { return idx < list->len; }
-void _must_in_len(const _List *list, size_t idx) {
-    if (_is_in_len(list, idx)) return;
+bool _is_in_list_len(const _List *list, size_t idx) { return idx < list->len; }
+void _must_in_list_len(const _List *list, size_t idx) {
+    if (_is_in_list_len(list, idx)) return;
     fprintf(stderr, "out of renge\n");
     exit(EXIT_FAILURE);
 }
@@ -102,7 +102,7 @@ void list_free(void *list) {
 
 _Node *_list_get(const _List *list, size_t idx) {
     _Node *node;
-    _must_in_len(list, idx);
+    _must_in_list_len(list, idx);
     if (idx * 2 < list->len) {
         /* 前からたどったほうが早い */
         node = list->head;
@@ -119,7 +119,7 @@ _Node *_list_get(const _List *list, size_t idx) {
 }
 
 size_t _list_get_mut(_List *list, size_t idx) {
-    _must_in_len(list, idx);
+    _must_in_list_len(list, idx);
     return idx;
 }
 
