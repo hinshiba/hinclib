@@ -22,15 +22,16 @@ union _IterCon {
 
 struct _Iter {
     void *ref;
+    bool has_next;
     union _IterCon _con;
     enum _IterConType _con_type;
-    bool (*next)(_Iter *);
-    bool (*prev)(_Iter *);
+    bool (*inext)(_Iter *);
+    bool (*iprev)(_Iter *);
 };
 
-bool _iter_next(_Iter *iter);
+bool _iter_has_next(_Iter *iter);
+void _iter_next(_Iter *iter);
 
-_Iter *_iter_new(void);
 void iter_free(void *iter);
 
 #define iter_def(Type)                      \
@@ -38,26 +39,39 @@ void iter_free(void *iter);
                                             \
     struct iter_##Type {                    \
         Type *ref;                          \
+        bool has_next;                      \
         union _IterCon _con;                \
         enum _IterConType _con_type;        \
-        bool (*next)(iter_##Type *);        \
-        bool (*prev)(iter_##Type *);        \
+        void (*inext)(iter_##Type *);       \
+        void (*iprev)(iter_##Type *);       \
     };
 
 // #define iter_def_for_vec(Type)
 
-#define iter_def_for_list(Type)                                  \
-    iter_##Type iter_##Type##_new_from_list(list_##Type *list) { \
-        iter_##Type iter = {                                     \
-            .ref = &list->head->data,                            \
-            ._con.list_node = (_Node *)list->head,               \
-            ._con_type = _ITER_LIST,                             \
-            .next = (bool (*)(iter_##Type *))_iter_next,         \
-        };                                                       \
-                                                                 \
-        return iter;                                             \
+#define iter_def_for_list(Type)                               \
+    iter_##Type iter_##Type##_list_begin(list_##Type *list) { \
+        iter_##Type iter = {                                  \
+            .ref = &list->head->data,                         \
+            .has_next = list->len > 0,                        \
+            ._con.list_node = (_Node *)list->head,            \
+            ._con_type = _ITER_LIST,                          \
+            .inext = (void (*)(iter_##Type *))_iter_next,     \
+        };                                                    \
+        return iter;                                          \
+    }                                                         \
+                                                              \
+    iter_##Type iter_##Type##_list_end(list_##Type *list) {   \
+        iter_##Type iter = {                                  \
+            .ref = &list->tail->data,                         \
+            .has_next = false,                                \
+            ._con.list_node = (_Node *)list->tail,            \
+            ._con_type = _ITER_LIST,                          \
+            .inext = (void (*)(iter_##Type *))_iter_next,     \
+        };                                                    \
+                                                              \
+        return iter;                                          \
     }
 
-#define iter_next(iter) iter.next(&iter)
+#define iter_next(iter) iter.inext(&iter)
 
 #endif  // HINC_ITER_H

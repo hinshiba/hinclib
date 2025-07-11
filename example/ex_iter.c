@@ -39,12 +39,9 @@ int main(void) {
     printf("pop: %d\n", *list_int_get(list, 0));
     printf("pop: %d\n", list_int_pop_back(list));
     printf("pop: %d\n", list_int_pop_back(list));
-    printf("pop: %d\n", list_int_pop_back(list));
-    node_int *node = list->head;
-    node_int_next(&node);
-    printf("next: %d", node->data);
-    printf("\n");
-    for (iter_int iter = iter_int_new_from_list(list);; iter_next(iter)) {
+
+    for (iter_int iter = iter_int_list_begin(list); iter.has_next;
+         iter_next(iter)) {
         printf("iter: %d\n", *iter.ref);
     }
 
