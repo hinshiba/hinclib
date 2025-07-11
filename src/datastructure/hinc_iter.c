@@ -37,15 +37,6 @@ bool _iter_next(_Iter *iter) {
     }
 }
 
-_Iter *_iter_new(void) {
-    _Iter *iter = malloc(sizeof(_Iter));
-    if (iter == NULL) {
-        perror("malloc miss in _iter_new\n");
-        exit(EXIT_FAILURE);
-    }
-    return iter;
-}
-
 void iter_free(void *iter) {
     free(iter);
     return;

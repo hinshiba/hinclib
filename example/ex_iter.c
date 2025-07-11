@@ -17,16 +17,7 @@ int compint(const int *l, const int *r) {
 /* 新しいlistの定義 */
 list_def(int);
 iter_def(int);
-// iter_def_for_list(int);
-
-iter_int *iter_int_new_from_list(list_int *list) {
-    _Iter *iter = _iter_new();
-    iter->ref = &list->head->data;
-    iter->_con.list_node = (_Node *)list->head;
-    iter->_con_type = _ITER_LIST;
-    iter->next = _iter_next;
-    return (iter_int *)iter;
-}
+iter_def_for_list(int);
 
 int main(void) {
     /* 新しいlistの宣言と初期化 */
@@ -53,8 +44,8 @@ int main(void) {
     node_int_next(&node);
     printf("next: %d", node->data);
     printf("\n");
-    for (iter_int *iter = iter_int_new_from_list(list);; iter_next(iter)) {
-        printf("iter: %d\n", *iter->ref);
+    for (iter_int iter = iter_int_new_from_list(list);; iter_next(iter)) {
+        printf("iter: %d\n", *iter.ref);
     }
 
     list_free(list);

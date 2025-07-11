@@ -46,16 +46,18 @@ void iter_free(void *iter);
 
 // #define iter_def_for_vec(Type)
 
-#define iter_def_for_list(Type)                                   \
-    iter_##Type *iter_##Type##_new_from_list(list_##Type *list) { \
-        _Iter *iter = _iter_new();                                \
-        iter->ref = &list->head->data;                            \
-        iter->_con.list_node = (_Node *)list->head;               \
-        iter->_con_type = _ITER_LIST;                             \
-        iter->next = (void (*)(iter_##Type *))_iter_next;         \
-        return (iter_##Type *)iter;                               \
+#define iter_def_for_list(Type)                                  \
+    iter_##Type iter_##Type##_new_from_list(list_##Type *list) { \
+        iter_##Type iter = {                                     \
+            .ref = &list->head->data,                            \
+            ._con.list_node = (_Node *)list->head,               \
+            ._con_type = _ITER_LIST,                             \
+            .next = (bool (*)(iter_##Type *))_iter_next,         \
+        };                                                       \
+                                                                 \
+        return iter;                                             \
     }
 
-#define iter_next(iter) iter->next(iter)
+#define iter_next(iter) iter.next(&iter)
 
 #endif  // HINC_ITER_H
