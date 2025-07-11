@@ -155,7 +155,11 @@ _Node *_list_pop_back(_List *list) {
     }
     _Node *tail = list->tail;
     list->tail = tail->prev;
-    list->tail->next = NULL;
+    if (list->tail) {
+        list->tail->next = NULL;
+    } else {
+        list->head = NULL;
+    }
     _ret_free_node(list, tail);
     return tail;
 }
