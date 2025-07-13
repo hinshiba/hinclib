@@ -45,6 +45,7 @@ void _iter_next(_Iter *iter) {
                 fprintf(stderr, "this iter is not valid\n");
                 break;
         }
+        iter->has_prev = true;
     }
     return;
 }
@@ -82,6 +83,7 @@ void _iter_prev(_Iter *iter) {
                 fprintf(stderr, "this iter is not valid\n");
                 break;
         }
+        iter->has_next = true;
     }
     return;
 }
