@@ -44,6 +44,14 @@ int main(void) {
          iter_next(iter)) {
         printf("iter: %d\n", *iter.ref);
     }
+    iter_int iter = iter_int_list_end(list);
+    printf("iter_prev: %d\n", *iter.ref);
+    iter_prev(iter);
+    printf("iter_prev: %d\n", *iter.ref);
+    iter_prev(iter);
+    printf("iter_prev: %d\n", *iter.ref);
+    iter_prev(iter);
+    printf("iter_prev: %d\n", *iter.ref);
 
     list_free(list);
 }
