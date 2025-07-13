@@ -58,7 +58,7 @@ void iter_free(void *iter);
         iter_##Type iter = {                                  \
             .ref = &list->head->data,                         \
             .has_next = list->len > 0,                        \
-            .has_prev = false,                                \
+            .has_prev = list->len > 0,                        \
             ._con.list_node = (_Node *)list->head,            \
             ._con_type = _ITER_LIST,                          \
             .inext = (void (*)(iter_##Type *))_iter_next,     \
@@ -70,7 +70,7 @@ void iter_free(void *iter);
     iter_##Type iter_##Type##_list_end(list_##Type *list) {   \
         iter_##Type iter = {                                  \
             .ref = &list->tail->data,                         \
-            .has_next = false,                                \
+            .has_next = list->len > 0,                        \
             .has_prev = list->len > 0,                        \
             ._con.list_node = (_Node *)list->tail,            \
             ._con_type = _ITER_LIST,                          \
