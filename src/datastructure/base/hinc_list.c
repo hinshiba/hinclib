@@ -345,6 +345,7 @@ void _list_sort(_List *list, int (*compar)(const void *, const void *)) {
     }
 
     list->head = head;
+    list->tail = tail;
 }
 
 /*------------------------------------------------------------
