@@ -204,6 +204,7 @@ void _list_erase(_List *list, size_t idx) {
         return;
     } else if (node == list->head) {
         _list_pop_front(list);
+        return;
     }
     node->prev->next = node->next;
     node->next->prev = node->prev;
