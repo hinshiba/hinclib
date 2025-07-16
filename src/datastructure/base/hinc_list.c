@@ -118,7 +118,7 @@ _Node *_list_get(const _List *list, size_t idx) {
     return node;
 }
 
-_Node *_list_get(_List *list, size_t idx) {
+_Node *_list_get_mut(_List *list, size_t idx) {
     _Node *node;
     _must_in_list_len(list, idx);
     if (idx * 2 < list->len) {
@@ -175,6 +175,40 @@ _Node *_list_pop_back(_List *list) {
     }
     _ret_free_node(list, tail);
     return tail;
+}
+
+_Node *_list_pop_front(_List *list) {
+    if (list->len == 0) {
+        fprintf(stderr, "try pop but list is empty\n");
+        exit(EXIT_FAILURE);
+    }
+    _Node *head = list->head;
+    list->head = head->next;
+    if (list->head) {
+        list->head->prev = NULL;
+    } else {
+        list->head = NULL;
+    }
+    _ret_free_node(list, head);
+    return head;
+}
+
+/*------------------------------------------------------------
+ * MARK: ランダム操作関連 (erase)
+ *------------------------------------------------------------*/
+
+void _list_erase(_List *list, size_t idx) {
+    _Node *node = _list_get_mut(list, idx);
+    if (node == list->tail) {
+        _list_pop_back(list);
+        return;
+    } else if (node == list->head) {
+        _list_pop_front(list);
+    }
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    _ret_free_node(list, node);
+    return;
 }
 
 /*------------------------------------------------------------
