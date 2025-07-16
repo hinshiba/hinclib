@@ -118,9 +118,22 @@ _Node *_list_get(const _List *list, size_t idx) {
     return node;
 }
 
-size_t _list_get_mut(_List *list, size_t idx) {
+_Node *_list_get(_List *list, size_t idx) {
+    _Node *node;
     _must_in_list_len(list, idx);
-    return idx;
+    if (idx * 2 < list->len) {
+        /* 前からたどったほうが早い */
+        node = list->head;
+        for (size_t i = 0; i < idx; ++i) {
+            node = node->next;
+        }
+    } else {
+        node = list->tail;
+        for (size_t i = list->len - 1; i != idx; --i) {
+            node = node->prev;
+        }
+    }
+    return node;
 }
 
 /*------------------------------------------------------------
