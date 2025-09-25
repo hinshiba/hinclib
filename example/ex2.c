@@ -41,5 +41,10 @@ int main(void) {
     node_int_next(&node);
     printf("next: %d", node->data);
     printf("\n");
+    list_int_sort(list, compint);
+    printf("popf: %d\n", list_int_pop_front(list));
+    list_int_erase(list, 3);
+    list_int_sort(list, compint);
+
     list_free(list);
 }
