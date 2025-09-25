@@ -34,9 +34,9 @@ int main(void) {
     printf("\n");
 
     /* 安全な vec[i] */
-    printf("vec[0]: %d\n", *vec_int_get(vec, 0));
-    printf("vec[1]: %d\n", *vec_int_get(vec, 1));
-    printf("vec[2]: %d\n", *vec_int_get(vec, 2));
+    printf("vec[0]: %d\n", vec_int_get(vec, 0));
+    printf("vec[1]: %d\n", vec_int_get(vec, 1));
+    printf("vec[2]: %d\n", vec_int_get(vec, 2));
     printf("\n");
 
     /* 実行時に out of range Error */

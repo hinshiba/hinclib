@@ -60,8 +60,8 @@ _Vec *_vec_cpy(_Vec *vec);
         return (vec_##Type *)_vec_from(data, sizeof(Type), len);       \
     }                                                                  \
                                                                        \
-    const Type *vec_##Type##_get(const vec_##Type *vec, size_t idx) {  \
-        return &vec->data[_vec_get((_Vec *)vec, idx)];                 \
+    const Type vec_##Type##_get(const vec_##Type *vec, size_t idx) {   \
+        return vec->data[_vec_get((_Vec *)vec, idx)];                  \
     }                                                                  \
                                                                        \
     Type *vec_##Type##_get_mut(vec_##Type *vec, size_t idx) {          \
@@ -95,8 +95,8 @@ _Vec *_vec_cpy(_Vec *vec);
                                     bool (*func)(const Type *)) {      \
         vec_##Type *new_vec = vec_##Type##_new(vec->len);              \
         for (size_t i = 0; i < vec->len; ++i) {                        \
-            const Type *elem = vec_##Type##_get(vec, i);               \
-            if (func(elem)) vec_##Type##_push(new_vec, *elem);         \
+            Type elem = vec_##Type##_get(vec, i);                      \
+            if (func(&elem)) vec_##Type##_push(new_vec, elem);         \
         }                                                              \
         return new_vec;                                                \
     }                                                                  \
@@ -105,8 +105,8 @@ _Vec *_vec_cpy(_Vec *vec);
                              Type first) {                             \
         Type res = first;                                              \
         for (size_t i = 0; i < vec->len; ++i) {                        \
-            const Type *elem = vec_##Type##_get(vec, i);               \
-            res = func(&res, elem);                                    \
+            Type elem = vec_##Type##_get(vec, i);                      \
+            res = func(&res, &elem);                                   \
         }                                                              \
         return res;                                                    \
     }
