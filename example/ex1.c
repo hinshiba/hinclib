@@ -28,40 +28,40 @@ vec_def(int);
 int main(void) {
     /* 新しいvecの宣言と初期化 */
     vec_int *vec = vec_int_from((int[]){1, 2, 3}, 3);
-    printf("data_size: %zu\n", vec->data_size);
-    printf("len: %zu\n", vec->len);
-    printf("size: %zu\n", vec->size);
+    printf("data_size: %zu\n", vec->data_size); /* 4 */
+    printf("len: %zu\n", vec->len);             /* 3 */
+    printf("size: %zu\n", vec->size);           /* 128 */
     printf("\n");
 
     /* 安全な vec[i] */
-    printf("vec[0]: %d\n", vec_int_get(vec, 0));
-    printf("vec[1]: %d\n", vec_int_get(vec, 1));
-    printf("vec[2]: %d\n", vec_int_get(vec, 2));
+    printf("vec[0]: %d\n", vec_int_get(vec, 0)); /* 1 */
+    printf("vec[1]: %d\n", vec_int_get(vec, 1)); /* 2 */
+    printf("vec[2]: %d\n", vec_int_get(vec, 2)); /* 3 */
     printf("\n");
 
     /* 実行時に out of range Error */
-    // printf("vec[2]: %d\n", *vec_int_get(vec, 3));
+    // printf("vec: %d\n", vec_int_get(vec, 3));
 
     /* 変更できるポインタの取得 */
     *vec_int_get_mut(vec, 1) = 10;
 
     /* pushとpop */
-    printf("pop: %d\n", vec_int_pop(vec));
+    printf("pop: %d\n", vec_int_pop(vec)); /* 3 */
     vec_int_push(vec, 100);
     printf("\n");
 
     /* foreachの利用 */
     vec_int_foreach(vec, duble_int);
-    vec_int_foreach(vec, print_int);
+    vec_int_foreach(vec, print_int); /* 2 20 200 */
     printf("\n");
 
     /* 条件を満たす要素だけの新しいvecを作成 */
-    vec_int *new_vec = vec_int_filter(vec, is_up15);
+    vec_int *new_vec = vec_int_filter(vec, is_up15); /* 20 200 */
     vec_int_foreach(new_vec, print_int);
     printf("\n");
 
     /* 累積的な計算 */
-    printf("sum: %d\n", vec_int_reduce(new_vec, sum_int, 0));
+    printf("sum: %d\n", vec_int_reduce(new_vec, sum_int, 0)); /* 220 */
     printf("\n");
 
     vec_free(vec);
