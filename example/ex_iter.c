@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "datastructure/base/hinc_list.h"
+#include "datastructure/base/hinc_vec.h"
 #include "datastructure/hinc_iter.h"
 
 int compint(const int *l, const int *r) {
@@ -15,9 +16,11 @@ int compint(const int *l, const int *r) {
 }
 
 /* 新しいlistの定義 */
+vec_def(int);
 list_def(int);
 iter_def(int);
 iter_def_for_list(int);
+iter_def_for_vec(int);
 
 int main(void) {
     /* 新しいlistの宣言と初期化 */
